@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>graph_dashboard</name>
+  <version>0.4.0</version>
+  <description>
+    Static ROS-graph dashboard: an AST-based scanner that extracts every
+    node, topic, and pub/sub edge declared anywhere in the workspace source
+    (running or not), and a local web view that renders the whole-project
+    architecture rqt_graph-style. Read-only introspection tooling; it never
+    imports or executes the scanned packages.
+  </description>
+  <maintainer email="i.jiraphan@gmail.com">JB</maintainer>
+  <license>MIT</license>
+
+  <!-- The scanner and server core are pure stdlib (ast + http.server).
+       rclpy is used ONLY by the server's live-overlay probe, imported
+       lazily inside its thread: without ROS sourced everything still runs
+       and /api/live reports itself unavailable. -->
+  <exec_depend>rclpy</exec_depend>
+
+  <test_depend>ament_copyright</test_depend>
+  <test_depend>ament_flake8</test_depend>
+  <test_depend>ament_pep257</test_depend>
+  <test_depend>ament_xmllint</test_depend>
+  <test_depend>python3-pytest</test_depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>
