@@ -202,14 +202,30 @@ def test_cpp_scanner_fixture(tmp_path):
     assert qos_by_topic["?topic_param_"]["depth"] == 5
 
 
-def test_real_repo_scan_unaffected_by_cpp_scanner():
-    # This repo has no C++ nodes: the C++ pass must add nothing, leaving the
-    # graph identical to what the Python-only scanner produced.
-    src_root = Path(__file__).parents[2]
-    graph = scan_workspace(src_root)
+def test_python_only_fixture_unaffected_by_cpp_pass(tmp_path):
+    # Invariance check independent of repo contents: a fixture tree with no
+    # .cpp/.cc/.hpp/.hh anywhere must yield only "python" nodes — the C++
+    # pass runs (it always does), finds nothing, and adds nothing.
+    graph = scan_workspace(_write_ws(tmp_path))
+    assert graph["nodes"]
     assert all(n["language"] == "python" for n in graph["nodes"])
     assert not any(f.endswith((".cpp", ".cc", ".hpp", ".hh"))
                    for f in (n["source_file"] for n in graph["nodes"]))
+
+
+def test_real_repo_scan_finds_vendored_cpp_and_keeps_python_nodes():
+    # Field test against the real workspace, which DOES contain C++ now
+    # (vendored realsense-ros): the C++ pass should find real nodes there
+    # while the known Python nodes stay intact alongside them. Exact
+    # realsense node names aren't pinned — the heuristic C++ scanner's
+    # output there may legitimately shift as it's refined.
+    src_root = Path(__file__).parents[2]
+    graph = scan_workspace(src_root)
+    cpp_nodes = [n for n in graph["nodes"] if n["language"] == "cpp"]
+    assert len(cpp_nodes) >= 1
+    assert all(n["source_file"].endswith((".cpp", ".cc", ".hpp", ".hh")) for n in cpp_nodes)
+    python_node_names = {n["node_name"] for n in graph["nodes"] if n["language"] == "python"}
+    assert {"camera", "preprocess", "hand_tracking"} <= python_node_names
     assert graph["summary"]["node_count"] >= 16  # sanity: real graph intact
 
 

@@ -104,6 +104,7 @@ def main(argv=None):
     srv._Handler.src_root = src_root
     srv._Handler.prober = srv.LiveProber()
     srv._Handler.tap_manager = srv.TapManager()
+    srv._Handler.scan_cache = srv._ScanCache()
     httpd = ThreadingHTTPServer(("127.0.0.1", 0), srv._Handler)
     port = httpd.server_address[1]
     thread = threading.Thread(target=httpd.serve_forever, daemon=True, name="bench-http")

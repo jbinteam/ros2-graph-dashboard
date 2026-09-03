@@ -10,7 +10,7 @@ package_name = "graph_dashboard"
 
 setup(
     name=package_name,
-    version="0.4.0",
+    version="0.6.0",
     packages=find_packages(exclude=["test"]),
     # Web assets (index.html + vendored vis-network) ship inside the Python
     # package so server.py can locate them via __file__ regardless of how

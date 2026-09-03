@@ -11,17 +11,25 @@ overlays live reality on top:
   (`rclcpp`, heuristic scan, indigo ring) nodes, topics, QoS where statically
   visible, test harnesses dashed. Re-scanned on every page reload.
 - **Live overlay** — running nodes light up green (DDS graph sampled every 2 s);
-  nodes that are running but not declared in source appear dotted, so the
-  picture never lies.
+  nodes and topics created only at runtime (dynamic names, C++ drivers) are
+  laid out and connected as first-class dotted elements, so the picture never
+  lies — and they can be focused and tapped like anything else.
 - **Hover** any element to light its full transitive chain; **click** to open a
   focus panel showing just its direct inputs (left) and outputs (right) — walk
   the impact chain hop by hop.
 - **Topic tap** — focus a topic to see its true measured Hz / bandwidth and the
-  newest message (live thumbnail for images, field tree for everything else),
-  via an on-demand best-effort depth-1 subscription that self-releases and is
-  verified not to disturb the pipeline it watches.
-- **Per-team deep links** — `/?focus=<node>&hide=pkg1,tests` gives each
-  sub-team a scoped view of their corner of the system.
+  newest message, via an on-demand best-effort depth-1 subscription that
+  self-releases and is verified not to disturb the pipeline it watches.
+  Color images render as live thumbnails; **depth images** (16UC1/32FC1) get a
+  Turbo colormap with the measured min–max range in meters; **pointclouds**
+  (PointCloud2) render as an interactive 3D orbit view (≤30k points, rgb or
+  depth-gradient coloring, zero extra dependencies); everything else falls back
+  to a field tree. The depth thumbnail doubles as a live camera-aiming tool.
+- **Noise controls** — legend chips hide test harnesses, image_transport
+  variants (`/compressed`, `/theora`, …), or every idle node (active-only
+  view) with one click.
+- **Per-team deep links** — `/?focus=<node>&hide=pkg1,tests,activeonly`
+  gives each sub-team a scoped view of their corner of the system.
 
 ## Quick start
 
